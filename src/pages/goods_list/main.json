@@ -1,0 +1,8 @@
+{
+    "navigationBarBackgroundColor": "#469DF8",
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "商品列表",
+    "enablePullDownRefresh": true,
+    "backgroundTextStyle": "dark"
+  }
+  

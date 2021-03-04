@@ -1,0 +1,55 @@
+{
+    "pages": [
+        "pages/index/main",
+        "pages/categories/main",
+        "pages/cart/main",
+        "pages/user/main",
+        "pages/search/main",
+        "pages/goods_detail/main",
+        "pages/goods_list/main",
+        "pages/feedback/main"
+    ],
+    "window": {
+        "navigationBarBackgroundColor": "#469DF8",
+        "navigationBarTextStyle": "white",
+        "navigationBarTitleText": "跳蚤市场",
+        "backgroundColor": "#eeeeee",
+        "backgroundTextStyle": "light"
+    },
+    "requiredBackgroundModes": [
+        "audio",
+        "location"
+    ],
+    "tabBar": {
+        "color": "black",
+        "selectedColor": "#ff4d60",
+        "backgroundColor": "white",
+        "position": "bottom",
+        "list": [
+            {
+                "pagePath": "pages/index/main",
+                "iconPath": "static/images/tabbar/home.png",
+                "selectedIconPath": "static/images/tabbar/home_active.png",
+                "text": "首页"
+            },
+            {
+                "pagePath": "pages/categories/main",
+                "iconPath": "static/images/tabbar/categories.png",
+                "selectedIconPath": "static/images/tabbar/categories_active.png",
+                "text": "分类"
+            },
+            {
+                "pagePath": "pages/cart/main",
+                "iconPath": "static/images/tabbar/cart.png",
+                "selectedIconPath": "static/images/tabbar/cart_active.png",
+                "text": "购物车"
+            },
+            {
+                "pagePath": "pages/user/main",
+                "iconPath": "static/images/tabbar/user.png",
+                "selectedIconPath": "static/images/tabbar/user_active.png",
+                "text": "我的"
+            }
+        ]
+    }
+}

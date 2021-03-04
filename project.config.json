@@ -1,0 +1,100 @@
+{
+    "description": "项目配置文件。",
+    "setting": {
+        "urlCheck": false,
+        "es6": true,
+        "enhance": true,
+        "postcss": true,
+        "preloadBackgroundData": false,
+        "minified": true,
+        "newFeature": true,
+        "coverView": true,
+        "nodeModules": false,
+        "autoAudits": false,
+        "showShadowRootInWxmlPanel": true,
+        "scopeDataCheck": false,
+        "uglifyFileName": false,
+        "checkInvalidKey": true,
+        "checkSiteMap": true,
+        "uploadWithSourceMap": true,
+        "compileHotReLoad": false,
+        "useMultiFrameRuntime": true,
+        "useApiHook": true,
+        "useApiHostProcess": true,
+        "babelSetting": {
+            "ignore": [],
+            "disablePlugins": [],
+            "outputPath": ""
+        },
+        "enableEngineNative": false,
+        "bundle": false,
+        "useIsolateContext": true,
+        "useCompilerModule": true,
+        "userConfirmedUseCompilerModuleSwitch": false,
+        "userConfirmedBundleSwitch": false,
+        "packNpmManually": false,
+        "packNpmRelationList": [],
+        "minifyWXSS": true
+    },
+    "miniprogramRoot": "dist/wx/",
+    "compileType": "miniprogram",
+    "appid": "wx6337405430aef36e",
+    "projectname": "shop_server",
+    "libVersion": "2.15.0",
+    "condition": {
+        "plugin": {
+            "list": []
+        },
+        "game": {
+            "list": []
+        },
+        "gamePlugin": {
+            "list": []
+        },
+        "miniprogram": {
+            "list": [
+                {
+                    "name": "pages/categories/main",
+                    "pathName": "pages/categories/main",
+                    "query": "",
+                    "scene": null
+                },
+                {
+                    "name": "pages/goods_list/main",
+                    "pathName": "pages/goods_list/main",
+                    "query": "",
+                    "scene": null
+                },
+                {
+                    "name": "pages/search/main",
+                    "pathName": "pages/search/main",
+                    "query": "",
+                    "scene": null
+                },
+                {
+                    "name": "pages/user/main",
+                    "pathName": "pages/user/main",
+                    "query": "",
+                    "scene": null
+                },
+                {
+                    "name": "pages/cart/main",
+                    "pathName": "pages/cart/main",
+                    "query": "",
+                    "scene": null
+                },
+                {
+                    "name": "pages/goods_detail/main",
+                    "pathName": "pages/goods_detail/main",
+                    "query": "",
+                    "scene": null
+                },
+                {
+                    "name": "pages/feedback/main",
+                    "pathName": "pages/feedback/main",
+                    "scene": null
+                }
+            ]
+        }
+    }
+}
