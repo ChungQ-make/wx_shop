@@ -1,8 +1,6 @@
 <template>
   <div class="indexContainer">
-    <!-- 地址选择与显示区 -->
     <div class="index_top">
-      <button class="btn" @click="handleChooseAdress">填写收货信息</button>
       <div class="content" v-show="address.userName">
         <div class="title">收货信息</div>
         <div class="item_list">
@@ -29,15 +27,11 @@
         <div class="bottom"></div>
       </div>
     </div>
-    <!-- 购物车内容区 -->
     <div class="index_bottom">
       <div class="cart_content">
         <div class="title">购物列表</div>
         <div class="item_content" v-for="(item, index) in cart" :key="index">
-          <div
-            class="item"
-            @longpress="deleteGoods(index)"
-          >
+          <div class="item">
             <a href="javacript:" class="weui-media-box weui-media-box_appmsg">
               <a :href="'/pages/goods_detail/main?goods_id=' + item.goods_id">
                 <div class="weui-media-box__hd">
@@ -55,37 +49,20 @@
                 </h4>
                 <div class="weui-media-box__desc">
                   <div class="cart_num_tool">
-                    <view class="numn_edit" @click="editGoodsNum(-1, index)">
-                      -
-                    </view>
-                    <view class="goods_num">{{ item.goods_num }}</view>
-                    <view class="numn_edit" @click="editGoodsNum(1, index)">
-                      +
-                    </view>
+                    <view class="goods_num">数量：{{ item.goods_num }}</view>
                   </div>
                 </div>
               </div>
-              <checkbox-group>
-                <checkbox
-                  :checked="item.isChecked"
-                  @click="changeChecked(index)"
-                ></checkbox>
-              </checkbox-group>
             </a>
           </div>
         </div>
         <div v-show="!cart.length">
-            <img src="../../../static/images/nothing1.png" alt="" />
+          <img src="../../../static/images/nothing1.png" alt="" />
         </div>
       </div>
     </div>
     <!-- 底部工具栏 -->
     <view class="footer_tool">
-      <view class="all_chk_wrap">
-        <checkbox-group>
-          <checkbox :checked="allChecked" @click="checkedAll"></checkbox>
-        </checkbox-group>
-      </view>
       <view class="total_price_wrap">
         <view class="total_price">
           合计：
@@ -93,9 +70,10 @@
         </view>
       </view>
       <view class="order_pay_wrap" @click="handlePay"
-        >结算({{ totalNum }})</view
+        >支付({{ totalNum }})</view
       >
     </view>
+    <!-- <div class="order_content"></div> -->
   </div>
 </template>
 
@@ -106,107 +84,22 @@ export default {
       address: {},
       cart: [],
       totalPrice: 0,
-      totalNum: 0,
-      _allChecked: true
+      totalNum: 0
     }
   },
   methods: {
-    //   获取地址信息
-    handleChooseAdress () {
-      wx.chooseAddress({
-        success: (res) => {
-          this.address = res
-          wx.setStorageSync('address', res)
-        }
-      })
-    },
-    // 初始化获取缓存地址数据
-    getAddress () {
-      this.address = wx.getStorageSync('address')
-    },
-    // 修改商品数量
-    editGoodsNum (num, index) {
-      if (this.cart[index].goods_num + num <= 0) {
-        wx.showModal({
-          title: '',
-          content: '是否删除该商品？',
-          showCancel: true,
-          cancelText: '取消',
-          cancelColor: '#000000',
-          confirmText: '确定',
-          confirmColor: '#3CC51F',
-          success: (result) => {
-            if (result.confirm) {
-              this.cart.splice(index, 1)
-              this.totalChange()
-            }
-          }
-        })
-      } else {
-        this.cart[index].goods_num += num
-      }
-      this.totalChange()
-    },
-    // 单个商品选中项改变
-    changeChecked (index) {
-      this.cart[index].isChecked = !this.cart[index].isChecked
-      this.totalChange()
-    },
-    // 全选事件
-    checkedAll () {
-      // 这里由于不能修改计算属性的allChecked
-      // 单独创建一个变量（_allChecked）来实现全选操作
-      this._allChecked = !this.allChecked
-      this.cart.forEach((item) => {
-        item.isChecked = this._allChecked
-      })
-      this.totalChange()
-    },
-    // 支付功能事件实现
-    handlePay () {
-      const { address, totalNum } = this
-      const userInfos = wx.getStorageSync('userInfos')
-      if (!userInfos.openid) {
-        wx.showToast({
-          title: '您还没有登陆！',
-          icon: 'none',
-          image: '',
-          duration: 1500,
-          mask: true
-        })
-        return
-      }
-      if (!address.userName) {
-        wx.showToast({
-          title: '您没有添加收货地址',
-          icon: 'none',
-          image: '',
-          duration: 1500,
-          mask: true
-        })
-        return
-      }
+    getOrderParma () {
+      // 获取缓存数据
+      const address = wx.getStorageSync('address')
+      let cart = wx.getStorageSync('cart') || []
+      // 过滤后的购物车数组
+      cart = cart.filter((v) => v.isChecked)
+      this.address = address
+      this.cart = cart
 
-      if (totalNum === 0) {
-        wx.showToast({
-          title: '您没有选购任何商品',
-          icon: 'none',
-          image: '',
-          duration: 1500,
-          mask: true
-        })
-        return
-      }
-      // 跳转至支付界面
-      wx.navigateTo({
-        url: '/pages/pay/main'
-      })
-    },
-    // 处理数据变动时导致总金额和总数量的事件(并修改缓存数据)
-    totalChange () {
       let totalNum = 0
       let totalPrice = 0
-      this.cart.forEach((value) => {
+      cart.forEach((value) => {
         if (value.isChecked) {
           totalNum += value.goods_num
           totalPrice += value.goods_price * value.goods_num
@@ -214,47 +107,104 @@ export default {
       })
       this.totalNum = totalNum
       this.totalPrice = totalPrice
-      wx.setStorageSync('cart', this.cart)
     },
-    // 获取缓存中的购物车数据
-    getCartData () {
-      this.cart = wx.getStorageSync('cart')
-      //   解决第一次使用产生的错误
-      this.cart = this.cart ? this.cart : []
-      this.totalChange()
-    },
-    // 长按删除事件
-    deleteGoods (index) {
+    // 支付事件实现
+    handlePay () {
+      const userInfos = wx.getStorageSync('userInfos')
+      const address =
+        this.address.provinceName +
+        this.address.cityName +
+        this.address.countyName +
+        this.address.detailInfo
+      let balance = userInfos.money - this.totalPrice
+      if (balance < 0) {
+        return wx.showToast({
+          title: '余额不足!',
+          icon: 'none',
+          image: '',
+          duration: 1500,
+          mask: true
+        })
+      }
       wx.showModal({
-        title: '',
-        content: '是否删除该商品？',
+        title: '支付确认',
+        content: `余额: ￥${userInfos.money} - ￥${this.totalPrice} = ￥${balance}`,
         showCancel: true,
         cancelText: '取消',
         cancelColor: '#000000',
         confirmText: '确定',
         confirmColor: '#3CC51F',
-        success: (result) => {
+        success: async (result) => {
           if (result.confirm) {
-            this.cart.splice(index, 1)
-            this.totalChange()
+            // 数据收集
+            // seller_id,seller_name,goods_id,totalPrice,totalNum,goods_price,goods_name
+            let formData = []
+            this.cart.forEach((item) => {
+              // let {seller_id, seller, goods_id, goods_price, goods_name, goods_num} = item
+              let totalPrice = item.goods_num * item.goods_price
+              let itemInfo = {
+                seller_id: item.seller_id,
+                seller_name: item.seller,
+                goods_id: item.goods_id,
+                goods_price: item.goods_price,
+                goods_name: item.goods_name,
+                totalNum: item.goods_num,
+                totalPrice,
+                buyer_name: userInfos.nickName,
+                buyer_id: userInfos.openid,
+                address
+              }
+              formData.push(itemInfo)
+            })
+            // console.log(formData)
+            // 发送请求
+            const { data } = await this.$fly.post('/order/create', {formData, totalPrice: this.totalPrice})
+            if (data.meta.status !== 200) {
+              return wx.showToast({
+                title: '支付失败！',
+                icon: 'danger',
+                image: '',
+                duration: 1500,
+                mask: true,
+                success: (result) => {
+                  setTimeout(() => {
+                    wx.switchTab({
+                      url: '/pages/cart/main'
+                    })
+                  }, 2000)
+                }
+              })
+            }
+            wx.showToast({
+              title: '支付成功！',
+              icon: 'success',
+              image: '',
+              duration: 1500,
+              mask: true,
+              success: (result) => {
+                // 更新购物车和缓存数据
+                userInfos.money = data.data.money
+                this.cart = []
+                wx.setStorageSync('userInfos', userInfos)
+                wx.setStorageSync('cart', this.cart)
+                setTimeout(() => {
+                  wx.switchTab({
+                    url: '/pages/cart/main'
+                  })
+                }, 2000)
+              }
+            })
           }
         },
-        fail: () => {},
+        fail: (err) => {
+          console.log(err)
+        },
         complete: () => {}
       })
     }
   },
-  computed: {
-    allChecked: function () {
-      // 全选选择框状态监听
-      return !this.cart.some((item) => {
-        return item.isChecked === false
-      })
-    }
-  },
   onShow () {
-    this.getAddress()
-    this.getCartData()
+    this.getOrderParma()
   }
 }
 </script>
@@ -322,19 +272,6 @@ export default {
     padding: 10rpx;
     margin-bottom: 110rpx;
     .cart_content {
-      // padding: 8rpx;
-      // border-radius: 10rpx;
-      // background-color: #fdf6ec;
-      // margin-top: 5rpx;
-      // border: #ebb563 1rpx solid;
-      // margin-bottom: 130rpx;
-      // .title {
-      //   margin-left: 10rpx;
-      //   font-weight: 600;
-      //   color: #ebb563;
-      //   margin-bottom: 25rpx;
-      //   border-radius: 8rpx;
-      // }
       padding: 8rpx;
       border: #ebb563 1rpx solid;
       border-radius: 8rpx;
@@ -353,27 +290,8 @@ export default {
         .item {
           .weui-media-box__desc {
             margin-left: 20rpx;
-          }
-          .cart_num_tool {
-            display: flex;
-            .numn_edit {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              width: 50rpx;
-              height: 50rpx;
-              border: #ebb563 1rpx solid;
-              border-radius: 50%;
-              background-color: #fff;
-              color: #ebb563;
-            }
-            .goods_num {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              width: 50rpx;
-              height: 50rpx;
-            }
+            color: black;
+            font-size: 32rpx;
           }
         }
       }

@@ -22,7 +22,7 @@
     </div>
 
     <!-- 楼层数据 -->
-    <div class="weui-panel weui-panel_access" v-for="(item1,index1) in floorDate" :key="index1" :hidden="!item1.children.length">
+    <div class="weui-panel weui-panel_access" v-for="(item1,index1) in floorDate" :key="index1" :hidden="!item1.children[0]">
             <div class="weui-panel__hd">{{item1.sort_name}}</div>
                 <div>
                     <div class="weui-panel__bd" v-for="(item2,index2) in item1.children" :key="index2" >
@@ -62,15 +62,15 @@ export default {
   methods: {
     async getSwiperList () {
       const {data} = await this.$fly.get('/home/swiperdata')
-      this.swiperList = data.data
+      this.swiperList = data.data || []
     },
     async getCatitemsInfo () {
       const {data} = await this.$fly.get('/home/catitems')
-      this.catitems = data.data
+      this.catitems = data.data || []
     },
     async getFloorData () {
       const {data} = await this.$fly.get('/home/floordata')
-      this.floorDate = data.data.floorData
+      this.floorDate = data.data.floorData || []
     }
   },
   onShow () {
@@ -79,9 +79,32 @@ export default {
     this.getFloorData()
     // 开启分享功能
     wx.showShareMenu({
-      withShareTicket: false,
+      withShareTicket: true,
       menus: ['shareAppMessage', 'shareTimeline']
     })
+  },
+  onShareAppMessage: function () {
+    wx.showShareMenu({
+      withShareTicket: true,
+      menus: ['shareAppMessage', 'shareTimeline']
+    })
+    return {
+      title: '应科二手市场',
+      path: '/pages/index/main',
+      success: function (shareTickets) {
+        console.info(shareTickets + '成功')
+        // 转发成功
+      },
+      fail: function (res) {
+        console.log(res + '失败')
+        // 转发失败
+      },
+      complete: function (res) {
+        // 不管成功失败都会执行
+      }
+    }
+  },
+  onShareTimeline: function () {
   },
   components: {SearchInput}
 

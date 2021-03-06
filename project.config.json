@@ -92,6 +92,18 @@
                 {
                     "name": "pages/feedback/main",
                     "pathName": "pages/feedback/main",
+                    "query": "",
+                    "scene": null
+                },
+                {
+                    "name": "pages/collect/main",
+                    "pathName": "pages/collect/main",
+                    "query": "",
+                    "scene": null
+                },
+                {
+                    "name": "pages/pay/main",
+                    "pathName": "pages/pay/main",
                     "scene": null
                 }
             ]
