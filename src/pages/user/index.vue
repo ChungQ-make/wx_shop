@@ -62,7 +62,7 @@
             <navigator url="javacript:">
               <view class="order_name balance">余额：{{ userInfo.money }}</view>
             </navigator>
-            <navigator url="/pages/recharge/main">
+            <navigator url="/pages/topUps/main">
               <view class="order_name">充值</view>
             </navigator>
           </view>

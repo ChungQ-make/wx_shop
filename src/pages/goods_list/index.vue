@@ -33,14 +33,82 @@
           </div>
         </div>
       </block>
-      <block v-else-if="tabs[1].isActive">浏览量</block>
-      <block v-else-if="tabs[2].isActive">价格</block>
+      <block v-else-if="tabs[1].isActive">
+        <div class="box_out">
+          <div class="box">
+            <div
+              class="item"
+              v-for="(item2, index2) in pageViewsSort"
+              :key="index2"
+            >
+              <a
+                :href="'/pages/goods_detail/main?goods_id=' + item2.goods_id"
+                class="weui-media-box weui-media-box_appmsg"
+              >
+                <div class="weui-media-box__hd">
+                  <img
+                    class="weui-media-box__thumb"
+                    :src="item2.goods_imgUrl[0]"
+                    alt=""
+                  />
+                </div>
+                <div class="weui-media-box__bd">
+                  <h4 class="weui-media-box__title">
+                    【<span style="color: red">￥{{ item2.goods_price }}</span
+                    >】{{ item2.goods_name }}
+                  </h4>
+                  <!-- <span style="right: 0;color: red;">{{ item2.goods_price }}￥</span> -->
+                  <p class="weui-media-box__desc">{{ item2.description }}</p>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </block>
+      <block v-else-if="tabs[2].isActive">
+        <div class="box_out">
+            <div class="box">
+                <div class="item btn" @click="changPriceSort(state)">
+                    切换排序
+                </div>
+            </div>
+          <div class="box">
+            <div
+              class="item"
+              v-for="(item2, index2) in priceSort"
+              :key="index2"
+            >
+              <a
+                :href="'/pages/goods_detail/main?goods_id=' + item2.goods_id"
+                class="weui-media-box weui-media-box_appmsg"
+              >
+                <div class="weui-media-box__hd">
+                  <img
+                    class="weui-media-box__thumb"
+                    :src="item2.goods_imgUrl[0]"
+                    alt=""
+                  />
+                </div>
+                <div class="weui-media-box__bd">
+                  <h4 class="weui-media-box__title">
+                    【<span style="color: red">￥{{ item2.goods_price }}</span
+                    >】{{ item2.goods_name }}
+                  </h4>
+                  <!-- <span style="right: 0;color: red;">{{ item2.goods_price }}￥</span> -->
+                  <p class="weui-media-box__desc">{{ item2.description }}</p>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </block>
     </Tabs>
   </div>
 </template>
 
 <script>
 import Tabs from '../components/Tabs'
+// import _ from 'lodash'
 export default {
   data () {
     return {
@@ -67,7 +135,11 @@ export default {
         pageSize: 0,
         pageCounts: 0,
         total: 0
-      }
+      },
+      pageViewsSort: [],
+      priceSort: [],
+      //   升降排序状态（默认升序）
+      state: false
     }
   },
   methods: {
@@ -81,6 +153,9 @@ export default {
         const { pageNum, pageSize, pageCounts, total } = data.data
         this.Paging = { pageNum, pageSize, pageCounts, total }
         this.goodsList = data.data.goodsList
+        // 获取排序数据
+        this.getPageViewSortData()
+        this.getPriceSortData()
       } else {
         const { data } = await this.$fly.get(
           `/goods/goodsList?goods_type=${goodsType}`,
@@ -91,6 +166,10 @@ export default {
         const { pageNum, pageSize, pageCounts, total } = data.data
         this.Paging = { pageNum, pageSize, pageCounts, total }
         this.goodsList = data.data.goodsList
+
+        // 获取排序数据
+        this.getPageViewSortData(goodsType)
+        this.getPriceSortData(goodsType)
       }
       //  关闭下拉刷新窗口
       wx.stopPullDownRefresh()
@@ -121,6 +200,62 @@ export default {
         const goodsList = data.data.goodsList
         this.goodsList = [...this.goodsList, ...goodsList]
       }
+    },
+    // 获取浏览量排序数据
+    async getPageViewSortData (goodsType) {
+      if (!goodsType) {
+        const { data } = await this.$fly.get('/goods/goodsList', {
+          pageSize: this.Paging.total
+        })
+        let goodsList = data.data.goodsList
+        this.pageViewsSort = goodsList.sort((a, b) => {
+          return b.pageViews - a.pageViews
+        })
+        this.priceSort = goodsList.sort((a, b) => {
+          return b.goods_price - a.goods_price
+        })
+      } else {
+        const { data } = await this.$fly.get(
+          `/goods/goodsList?goods_type=${goodsType}`,
+          {
+            pageSize: this.Paging.total
+          }
+        )
+        const goodsList = data.data.goodsList
+        this.pageViewsSort = goodsList.sort((a, b) => {
+          return b.pageViews - a.pageViews
+        })
+      }
+    },
+    // 获取价格排序数据
+    async getPriceSortData (goodsType) {
+      if (!goodsType) {
+        const { data } = await this.$fly.get('/goods/goodsList', {
+          pageSize: this.Paging.total
+        })
+        const goodsList = data.data.goodsList
+        this.priceSort = goodsList.sort((a, b) => {
+          return b.goods_price - a.goods_price
+        })
+      } else {
+        const { data } = await this.$fly.get(
+          `/goods/goodsList?goods_type=${goodsType}`,
+          {
+            pageSize: this.Paging.total
+          }
+        )
+        const goodsList = data.data.goodsList
+        this.priceSort = goodsList.sort((a, b) => {
+          return b.goods_price - a.goods_price
+        })
+      }
+    },
+    // 改变价格升降排序
+    changPriceSort (state) {
+      this.state = !state
+      if (this.state) {
+        this.priceSort = this.priceSort.reverse()
+      }
     }
   },
   onShow () {
@@ -143,7 +278,31 @@ export default {
     // this.Paging.pageNum = 0
     this.getGoodsList()
   },
-  components: { Tabs }
+  components: {
+    Tabs
+  } /* ,
+  computed: {
+    pageViewsSort: {
+      // 通过计算属性得到按浏览量从大到小的排序数据
+      get: function () {
+        let _goodsList = []
+        _goodsList = this.goodsList.sort((a, b) => {
+          return b.pageViews - a.pageViews
+        })
+        return _goodsList
+      }
+    },
+    priceSort: {
+      // 通过计算属性得到按价格从大到小的排序数据
+      get: function () {
+        let _goodsList = []
+        _goodsList = this.goodsList.sort((a, b) => {
+          return b.pageViews - a.pageViews
+        })
+        return _goodsList
+      }
+    }
+  } */
 }
 </script>
 
@@ -157,6 +316,13 @@ export default {
       border-radius: 8rpx;
       padding: 10rpx;
       margin-bottom: 10rpx;
+    }
+    .btn{
+        display: flex; 
+        justify-content: center;
+        align-items: center;
+        color: var(--themeColor);
+        /* font-family: Arial, Helvetica, sans-serif; */
     }
   }
 }

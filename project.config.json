@@ -40,7 +40,7 @@
     "compileType": "miniprogram",
     "appid": "wx6337405430aef36e",
     "projectname": "shop_server",
-    "libVersion": "2.15.0",
+    "libVersion": "2.14.4",
     "condition": {
         "plugin": {
             "list": []
@@ -104,6 +104,12 @@
                 {
                     "name": "pages/pay/main",
                     "pathName": "pages/pay/main",
+                    "query": "",
+                    "scene": null
+                },
+                {
+                    "name": "pages/topUps/main",
+                    "pathName": "pages/topUps/main",
                     "scene": null
                 }
             ]

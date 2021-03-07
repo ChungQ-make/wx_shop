@@ -4,8 +4,12 @@ import Fly from 'flyio/dist/npm/wx'
 import '../static/css/weui.css'
 import '../static/css/iconfont.css'
 import moment from 'moment'
+// import _ from 'lodash'
 // 设置vue的提示功能关闭
 Vue.config.productionTip = false
+
+// ! 挂载lodash
+// Vue.prototype._ = _
 
 // ! 挂载moent时间格式转换插件
 Vue.prototype.$moment = moment
