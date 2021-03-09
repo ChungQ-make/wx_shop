@@ -10,7 +10,9 @@
         "pages/feedback/main",
         "pages/collect/main",
         "pages/pay/main",
-        "pages/topUps/main"
+        "pages/topUps/main",
+        "pages/order_detail/main",
+        "pages/order_list/main"
     ],
     "window": {
         "navigationBarBackgroundColor": "#469DF8",

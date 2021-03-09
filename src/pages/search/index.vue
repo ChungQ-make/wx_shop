@@ -11,35 +11,35 @@
       </div>
     </div>
     <div class="search_content">
-        <div class="box">
-            <div class="item" v-for="(item, index) in goodsList" :key="index">
-                    <div class="weui-panel__bd">
-      <a
-        :href="'/pages/goods_detail/main?goods_id=' + item.goods_id"
-        class="weui-media-box weui-media-box_appmsg GoodsItem"
-      >
-        <div class="weui-media-box__hd">
-          <img
-            class="weui-media-box__thumb"
-            :src="item.goods_imgUrl[0]"
-            alt=""
-          />
+      <div class="box">
+        <div class="item" v-for="(item, index) in goodsList" :key="index">
+          <div class="weui-panel__bd">
+            <a
+              :href="'/pages/goods_detail/main?goods_id=' + item.goods_id"
+              class="weui-media-box weui-media-box_appmsg GoodsItem"
+            >
+              <div class="weui-media-box__hd">
+                <img
+                  class="weui-media-box__thumb"
+                  :src="item.goods_imgUrl[0]"
+                  alt=""
+                />
+              </div>
+              <div class="weui-media-box__bd">
+                <h4 class="weui-media-box__title">
+                  【<span style="color: red">￥{{ item.goods_price }}</span
+                  >】{{ item.goods_name }}
+                </h4>
+                <!-- <span style="right: 0;color: red;">{{ item.goods_price }}￥</span> -->
+                <p class="weui-media-box__desc">【卖家】{{ item.seller }}</p>
+                <p class="weui-media-box__desc">
+                  【上架时间】{{ item.created_time }}
+                </p>
+              </div>
+            </a>
+          </div>
         </div>
-        <div class="weui-media-box__bd">
-          <h4 class="weui-media-box__title">
-            【<span style="color: red">￥{{ item.goods_price }}</span
-            >】{{ item.goods_name }}
-          </h4>
-          <!-- <span style="right: 0;color: red;">{{ item.goods_price }}￥</span> -->
-          <p class="weui-media-box__desc">【卖家】{{ item.seller }}</p>
-          <p class="weui-media-box__desc">
-            【上架时间】{{ item.created_time }}
-          </p>
-        </div>
-      </a>
-    </div>
-            </div>
-        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -105,7 +105,7 @@ page {
       background-color: #fff;
       flex: 1;
       height: 100%;
-    margin-left: 10rpx;
+      margin-left: 10rpx;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -117,12 +117,12 @@ page {
 .search_content {
   margin-top: 15rpx;
   padding: 15rpx;
-  .box{
-      .item{
-          border-radius: 15rpx;
-          background-color: #fff;
-          margin-bottom: 10rpx;
-      }
+  .box {
+    .item {
+      border-radius: 15rpx;
+      background-color: #fff;
+      margin-bottom: 10rpx;
+    }
   }
 }
 

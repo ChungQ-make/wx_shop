@@ -16,7 +16,6 @@
             <input class="weui-input" type="number" placeholder="自定义充值" v-model="topUpsMoney" />
           </div>
           <div class="btn" @click="topUpsDiy">充值</div>
-          <button class="btn"  open-type="getUserInfo" @getuserinfo="login">充值</button>
         </div>
       </div>
     </div>
@@ -27,17 +26,28 @@
 export default {
   data () {
     return {
-      topUpsMoney: 0
+      topUpsMoney: '',
+      openid: ''
     }
   },
   methods: {
-    //   自定义充值金额
+    //   获取openid
+    getUserOpenid () {
+      const userInfos = wx.getStorageSync('userInfos')
+      if (!userInfos) {
+        return wx.switchTab({
+          url: '/pages/user/main'
+        })
+      }
+      this.openid = userInfos.openid
+    },
+    //   按自定义充值金额
     topUpsDiy () {
       const topUpsMoney = this.topUpsMoney
       if (topUpsMoney <= 0) {
         return wx.showToast({
           title: '请输入合法数据',
-          icon: 'none',
+          icon: 'error',
           image: '',
           duration: 1500,
           mask: true
@@ -45,44 +55,75 @@ export default {
       }
       wx.showModal({
         title: '充值确认',
-        content: `您充值的金额：${this.topUpsMoney}元`,
+        content: `您充值的金额：${this.topUpsMoney}.0元`,
         showCancel: true,
         cancelText: '取消',
         cancelColor: '#000000',
         confirmText: '确定',
         confirmColor: '#3CC51F',
-        success: (result) => {
+        success: async (result) => {
           if (result.confirm) {
-            console.log(topUpsMoney)
+            const {data} = await this.$fly.post('/user/topUps', {openid: this.openid, topUpsMoney})
+            if (data.meta.status !== 200) {
+              return wx.showToast({
+                title: '充值失败！',
+                icon: 'erron',
+                image: '',
+                duration: 2000,
+                mask: true
+              })
+            }
+            wx.setStorageSync('userInfos', data.data.userInfos)
+            wx.showToast({
+              title: '充值成功！',
+              icon: 'success',
+              image: '',
+              duration: 2000,
+              mask: true
+            })
+            this.topUpsMoney = 0
           }
         }
       })
     },
 
-    // 按规格充值
+    // 按指定规格充值
     topUps (topUpsMoney) {
       wx.showModal({
         title: '充值确认',
-        content: `您充值的金额：${topUpsMoney}元`,
+        content: `您充值的金额：${topUpsMoney}.0元`,
         showCancel: true,
         cancelText: '取消',
         cancelColor: '#000000',
         confirmText: '确定',
         confirmColor: '#3CC51F',
-        success: (result) => {
+        success: async (result) => {
           if (result.confirm) {
-            console.log(topUpsMoney)
+            const {data} = await this.$fly.post('/user/topUps', {openid: this.openid, topUpsMoney})
+            if (data.meta.status !== 200) {
+              return wx.showToast({
+                title: '充值失败！',
+                icon: 'erron',
+                image: '',
+                duration: 2000,
+                mask: true
+              })
+            }
+            wx.setStorageSync('userInfos', data.data.userInfos)
+            wx.showToast({
+              title: '充值成功！',
+              icon: 'success',
+              image: '',
+              duration: 2000,
+              mask: true
+            })
           }
         }
       })
-    },
-    login () {
-      wx.getUserInfo({
-        complete: (res) => {
-          console.log(res)
-        }
-      })
     }
+  },
+  onShow () {
+    this.getUserOpenid()
   }
 }
 </script>

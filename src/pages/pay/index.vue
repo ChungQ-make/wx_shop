@@ -156,15 +156,14 @@ export default {
               }
               formData.push(itemInfo)
             })
-            // console.log(formData)
             // 发送请求
             const { data } = await this.$fly.post('/order/create', {formData, totalPrice: this.totalPrice})
             if (data.meta.status !== 200) {
               return wx.showToast({
                 title: '支付失败！',
-                icon: 'danger',
+                icon: 'error',
                 image: '',
-                duration: 1500,
+                duration: 2000,
                 mask: true,
                 success: (result) => {
                   setTimeout(() => {
@@ -179,7 +178,7 @@ export default {
               title: '支付成功！',
               icon: 'success',
               image: '',
-              duration: 1500,
+              duration: 2000,
               mask: true,
               success: (result) => {
                 // 更新购物车和缓存数据

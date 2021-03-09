@@ -33,28 +33,7 @@
                 <view class="his_name">发布新商品</view>
             </navigator> -->
         </view>
-        <!-- 我的订单 -->
-        <view class="orders_wrap" :hidden="!isShow">
-          <view class="orders_title">我的订单</view>
-          <view class="orders_content">
-            <navigator url="/pages/order/index?type=1">
-              <view class="iconfont icon-dingdan-"></view>
-              <view class="order_name">全部订单</view>
-            </navigator>
-            <navigator url="/pages/order/index?type=2">
-              <view class="iconfont icon-daifukuan01"></view>
-              <view class="order_name">已支付</view>
-            </navigator>
-            <navigator url="/pages/order/index?type=3">
-              <view class="iconfont icon-daishouhuo-"></view>
-              <view class="order_name">待收货</view>
-            </navigator>
-            <navigator>
-              <view class="iconfont icon-tuihuo"></view>
-              <view class="order_name">退款/退货</view>
-            </navigator>
-          </view>
-        </view>
+
         <!-- 我的钱包 -->
         <view class="orders_wrap" :hidden="!isShow">
           <view class="orders_title">我的钱包</view>
@@ -67,11 +46,45 @@
             </navigator>
           </view>
         </view>
+        <!-- 我的订单 -->
+        <view class="orders_wrap" :hidden="!isShow">
+          <view class="orders_title">我的订单</view>
+          <view class="orders_content">
+            <navigator url="/pages/order_list/main?type=1">
+              <view class="iconfont icon-dingdan-"></view>
+              <view class="order_name">全部订单</view>
+            </navigator>
+            <navigator url="/pages/order_list/main?type=2">
+              <view class="iconfont icon-daifukuan01"></view>
+              <view class="order_name">已支付</view>
+            </navigator>
+            <navigator url="/pages/order_list/main?type=3">
+              <view class="iconfont icon-daishouhuo-"></view>
+              <view class="order_name">待收货</view>
+            </navigator>
+            <navigator url="/pages/order_list/main?type=4">
+              <view class="iconfont icon-tuihuo"></view>
+              <view class="order_name">退款/退货</view>
+            </navigator>
+          </view>
+        </view>
         <!-- 发布我的商品 -->
-        <view class="address_wrap" :hidden="!isShow">
-          <navigator url="javacript:">
-            <view class="showMyGoods">发布我的商品</view>
-          </navigator>
+        <view class="orders_wrap" :hidden="!isShow">
+          <view class="orders_title">我的商品</view>
+          <view class="orders_content">
+            <navigator url="/pages/order/index?type=1">
+              <view class="order_name">发布商品</view>
+            </navigator>
+            <navigator url="/pages/order/index?type=2">
+              <view class="order_name">管理商品</view>
+            </navigator>
+            <navigator url="/pages/order/index?type=3">
+              <view class="order_name">管理订单</view>
+            </navigator>
+            <navigator>
+              <view class="order_name">咨询室</view>
+            </navigator>
+          </view>
         </view>
         <!-- 收货地址管理 -->
         <view class="address_wrap" @click="handleChooseAdress"
@@ -281,9 +294,6 @@ page {
         margin-top: 30rpx;
         background-color: #fff;
         padding: 20rpx;
-        .showMyGoods {
-          color: var(--themeColor);
-        }
       }
       .app_info_wrap {
         border-radius: 8rpx;
