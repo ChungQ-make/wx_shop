@@ -1,8 +1,10 @@
 <template>
   <div class="indexContainer">
-    <button open-type="getUserInfo" @getuserinfo="login" :hidden="isShow">
+    <!-- <button open-type="getUserInfo" @getuserinfo="login" :hidden="isShow">
       登陆
-    </button>
+    </button> -->
+    <!-- wx.getUserInfo 接口调整 改用 wx.getUserProfile 替代 -->
+    <button class="btn" @click="login" :hidden="isShow">登录</button>
     <view class="user_info_wrap">
       <view class="user_wrap" :hidden="!isShow">
         <image class="user_bg" :src="userInfo.avatarUrl" mode="widthFix" />
@@ -24,8 +26,8 @@
             <view class="his_num">{{ collectionsNum }}</view>
             <view class="his_name">收藏的商品</view>
           </navigator>
-          <navigator :hidden="!isShow">
-            <view class="his_num">0</view>
+          <navigator :hidden="!isShow" url="/pages/myGoods/main">
+            <view class="his_num">{{myGoodsNum}}</view>
             <view class="his_name">发布的商品</view>
           </navigator>
           <!-- <navigator>
@@ -39,7 +41,7 @@
           <view class="orders_title">我的钱包</view>
           <view class="orders_content">
             <navigator url="javacript:">
-              <view class="order_name balance">余额：{{ userInfo.money }}</view>
+              <view class="order_name balance">￥{{ userInfo.money }}</view>
             </navigator>
             <navigator url="/pages/topUps/main">
               <view class="order_name">充值</view>
@@ -72,17 +74,17 @@
         <view class="orders_wrap" :hidden="!isShow">
           <view class="orders_title">我的商品</view>
           <view class="orders_content">
-            <navigator url="/pages/order/index?type=1">
+            <navigator url="/pages/release/main">
               <view class="order_name">发布商品</view>
             </navigator>
-            <navigator url="/pages/order/index?type=2">
+            <navigator url="/pages/myGoods/main">
               <view class="order_name">管理商品</view>
             </navigator>
-            <navigator url="/pages/order/index?type=3">
+            <navigator url="/pages/order_manage/main">
               <view class="order_name">管理订单</view>
             </navigator>
-            <navigator>
-              <view class="order_name">咨询室</view>
+            <navigator url="/pages/return/main">
+              <view class="order_name">退货管理</view>
             </navigator>
           </view>
         </view>
@@ -117,15 +119,43 @@ export default {
     return {
       isShow: true,
       userInfo: {},
-      collectionsNum: 0
+      collectionsNum: 0,
+      myGoodsNum: 0
     }
   },
   methods: {
     //   登录操作
     login (e) {
-      // console.log(e)
-      // 判断用户是否授权
-      if (e.target.userInfo) {
+      wx.getUserProfile({
+        desc: '获取用户信息',
+        success: (res) => {
+          const { userInfo } = res
+          wx.login({
+            success: async (res1) => {
+              const { code } = res1
+              const data = await this.$fly.post('/user/login', {
+                code,
+                userInfo
+              })
+              const { userInfos, token } = data.data.data
+              wx.setStorageSync('token', token)
+              wx.setStorageSync('userInfos', userInfos)
+              this.userInfo = userInfos
+              this.isShow = true
+            }
+          })
+        }
+      })
+
+    //   ! 由于小程序接口调整 改用新的Api（wx.getUserProfile）获取用户数据
+    //  * 以下为原来的获取方式 （wx.getUserInfo）
+      /*  if (e.target.userInfo) {
+        wx.getUserProfile({
+          desc: '获取用户信息',
+          complete: (res) => {
+            console.log(res)
+          }
+        })
         wx.login({
           success: async (res1) => {
             const { code } = res1
@@ -145,14 +175,17 @@ export default {
             })
           }
         })
-      }
+      } */
     },
     // 页面加载时读取缓存数据 没有则显示登陆按钮
-    getUserInfos () {
+    async getUserInfos () {
       const userInfos = wx.getStorageSync('userInfos')
       if (userInfos.openid) {
         this.isShow = true
-        this.userInfo = userInfos
+        // 这里改成获取最新数据
+        const {data} = await this.$fly.post('/user/getUerinfo', {openid: userInfos.openid})
+        this.userInfo = data.data
+        wx.setStorageSync('userInfos', this.userInfo)
       } else {
         this.isShow = false
       }
@@ -188,15 +221,43 @@ export default {
         fail: () => {},
         complete: () => {}
       })
+    },
+    // 获取缓存中的发布成功商品数
+    getMyGoodsNum () {
+      this.myGoodsNum = wx.getStorageSync('myGoodsNum')
     }
   },
   onShow () {
     this.getUserInfos()
     this.getCollectionsCount()
+    this.getMyGoodsNum()
     wx.showShareMenu({
       withShareTicket: true,
       menus: ['shareAppMessage', 'shareTimeline']
     })
+  },
+  onShareAppMessage: function () {
+    // wx.showShareMenu({
+    //   withShareTicket: true,
+    //   menus: ['shareAppMessage', 'shareTimeline']
+    // })
+    return {
+      title: '应科二手市场',
+      path: '/pages/index/main',
+      success: function (shareTickets) {
+        console.info(shareTickets + '成功')
+        // 转发成功
+      },
+      fail: function (res) {
+        console.log(res + '失败')
+        // 转发失败
+      },
+      complete: function (res) {
+        // 不管成功失败都会执行
+      }
+    }
+  },
+  onShareTimeline: function () {
   }
 }
 </script>

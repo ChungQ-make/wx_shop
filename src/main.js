@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import App from './app'
 import Fly from 'flyio/dist/npm/wx'
-import '../static/css/weui.css'
+import 'weui-miniprogram/miniprogram_dist/weui-wxss/dist/style/weui.wxss'
 import '../static/css/iconfont.css'
 import moment from 'moment'
 // import _ from 'lodash'

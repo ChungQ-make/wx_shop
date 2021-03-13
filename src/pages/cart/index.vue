@@ -26,6 +26,10 @@
           <span class="item1">邮政编码</span>
           <span class="item2">{{ address.postalCode }}</span>
         </div>
+        <div class="item_list">
+          <span class="item1">联系方式</span>
+          <span class="item2">{{ address.telNumber }}</span>
+        </div>
         <div class="bottom"></div>
       </div>
     </div>

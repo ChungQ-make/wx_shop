@@ -1,4 +1,5 @@
 <template>
+<!-- 此页为购买者的订单详情页面 -->
   <div class="index">
     <div class="box">
       <view class="table">
@@ -86,10 +87,6 @@
     </div>
     <div v-show="orderDetail.status < 2">
       <div class="editAddress" @click="editAddress">修改地址</div>
-      <div class="takeGoods" @click="takeGoods(orderDetail.order_id,orderDetail.seller_id)">确认收货</div>
-    </div>
-    <div v-show="orderDetail.status < 3">
-      <div class="tuihuo" @click="returnGoods">申请退货</div>
     </div>
   </div>
 </template>
@@ -206,79 +203,6 @@ export default {
         image: '',
         duration: 1500,
         mask: true
-      })
-    },
-    // 退货申请
-    returnGoods () {
-      const orderID = this.orderDetail.order_id
-      wx.showModal({
-        title: '确认退款？',
-        content: '',
-        showCancel: true,
-        cancelText: '取消',
-        cancelColor: '#000000',
-        confirmText: '确定',
-        confirmColor: '#3CC51F',
-        success: async (result) => {
-          if (result.confirm) {
-            const {data} = await this.$fly.post('/order/returnGoods', {order_id: orderID})
-            // console.log(data)
-            if (data.meta.status !== 200) {
-              return wx.showToast({
-                title: '操作失败！请重试',
-                icon: 'none',
-                mask: true
-              })
-            }
-            wx.showToast({
-              title: '申请退货中！',
-              icon: 'success',
-              mask: true
-            })
-            this.getOrderDetail()
-            setTimeout(() => {
-              wx.navigateBack({
-                delta: 1
-              })
-            }, 2000)
-          }
-        }
-      })
-    },
-    // 确认收货
-    takeGoods (orderID, sellerID) {
-      wx.showModal({
-        title: '确认收货？',
-        content: '',
-        showCancel: true,
-        cancelText: '取消',
-        cancelColor: '#000000',
-        confirmText: '确定',
-        confirmColor: '#3CC51F',
-        success: async (result) => {
-          if (result.confirm) {
-            const {data} = await this.$fly.post('/order/takeGoods', {order_id: orderID, seller_id: sellerID})
-            // console.log(data)
-            if (data.meta.status !== 200) {
-              return wx.showToast({
-                title: '操作失败！请重试',
-                icon: 'none',
-                mask: true
-              })
-            }
-            wx.showToast({
-              title: '收货成功！',
-              icon: 'success',
-              mask: true
-            })
-            this.getOrderDetail()
-            setTimeout(() => {
-              wx.navigateBack({
-                delta: 1
-              })
-            }, 2000)
-          }
-        }
       })
     }
   },

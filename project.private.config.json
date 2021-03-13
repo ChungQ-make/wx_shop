@@ -83,6 +83,29 @@
                     "pathName": "pages/order_detail/main",
                     "query": "order_id=1615207627683",
                     "scene": null
+                },
+                {
+                    "name": "pages/release/main",
+                    "pathName": "pages/release/main",
+                    "query": "order_id=1615207627683",
+                    "scene": null
+                },
+                {
+                    "name": "pages/myGoods/main",
+                    "pathName": "pages/myGoods/main",
+                    "query": "",
+                    "scene": null
+                },
+                {
+                    "name": "pages/order_manage/main",
+                    "pathName": "pages/order_manage/main",
+                    "query": "",
+                    "scene": null
+                },
+                {
+                    "name": "pages/return/main",
+                    "pathName": "pages/return/main",
+                    "scene": null
                 }
             ]
         }

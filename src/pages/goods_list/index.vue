@@ -211,9 +211,6 @@ export default {
         this.pageViewsSort = goodsList.sort((a, b) => {
           return b.pageViews - a.pageViews
         })
-        this.priceSort = goodsList.sort((a, b) => {
-          return b.goods_price - a.goods_price
-        })
       } else {
         const { data } = await this.$fly.get(
           `/goods/goodsList?goods_type=${goodsType}`,

@@ -5,7 +5,7 @@
       class="box"
       v-for="(item, index) in orderList"
       :key="index"
-      @longpress="item.status <= 3 && longCheckItem(item.order_id, item.status)"
+      @longpress="item.status <= 3 && longCheckItem(item.order_id, item.status,item.seller_id)"
     >
       <a :href="'/pages/order_detail/main?order_id=' + item.order_id">
         <div class="item1">
@@ -15,7 +15,7 @@
         </div>
       </a>
       <div class="item2">
-        <div class="amount">{{ item.totalPrice }}.0元</div>
+        <div class="amount">{{ item.totalPrice }}元</div>
         <div class="state" :style="state[item.status].color">
           {{ state[item.status].text }}
         </div>
@@ -76,14 +76,14 @@ export default {
       }
     },
     // 长按弹出框
-    longCheckItem (orderID, status) {
-      if (status < 2) {
+    longCheckItem (orderID, status, sellerID) {
+      if (status === 0) {
         wx.showActionSheet({
           itemList: ['确认收货', '申请退款'],
           success: (res) => {
           //   console.log(res.tapIndex)
             if (res.tapIndex === 0) {
-              this.takeGoods(orderID)
+              this.takeGoods(orderID, sellerID)
             } else if (res.tapIndex === 1) {
               this.returnGoods(orderID)
             }
@@ -98,55 +98,19 @@ export default {
             }
           }
         })
+      } else if (status === 1) {
+        wx.showActionSheet({
+          itemList: ['确认收货'],
+          success: (res) => {
+            if (res.tapIndex === 0) {
+              this.takeGoods(orderID, sellerID)
+            }
+          }
+        })
       }
-    //   wx.showActionSheet({
-    //     itemList: ['确认收货', '申请退款'],
-    //     success: (res) => {
-    //       //   console.log(res.tapIndex)
-    //       if (res.tapIndex === 0) {
-    //         if (status === 2) {
-    //           return wx.showToast({
-    //             title: '无法重复确认收货',
-    //             icon: 'none',
-    //             image: '',
-    //             duration: 1500,
-    //             mask: true
-    //           })
-    //         } else if (status > 2) {
-    //           return wx.showToast({
-    //             title: '当前订单无法确认收货，请联系商家或者管理员',
-    //             icon: 'none',
-    //             image: '',
-    //             duration: 1500,
-    //             mask: true
-    //           })
-    //         }
-    //         this.takeGoods(orderID)
-    //       } else if (res.tapIndex === 1) {
-    //         if (status === 4) {
-    //           return wx.showToast({
-    //             title: '当前订单正在退货序列中',
-    //             icon: 'none',
-    //             image: '',
-    //             duration: 1500,
-    //             mask: true
-    //           })
-    //         } else if (status === 5) {
-    //           return wx.showToast({
-    //             title: '当前订单已完成退货操作',
-    //             icon: 'none',
-    //             image: '',
-    //             duration: 1500,
-    //             mask: true
-    //           })
-    //         }
-    //         this.returnGoods(orderID)
-    //       }
-    //     }
-    //   })
     },
     // 退货申请
-    async returnGoods (orderID) {
+    returnGoods (orderID) {
       wx.showModal({
         title: '确认退款？',
         content: '',
@@ -155,14 +119,22 @@ export default {
         cancelColor: '#000000',
         confirmText: '确定',
         confirmColor: '#3CC51F',
-        success: (result) => {
+        success: async (result) => {
           if (result.confirm) {
+            const {data} = await this.$fly.post('/order/returnGoods', {order_id: orderID})
+            // console.log(data)
+            if (data.meta.status !== 200) {
+              return wx.showToast({
+                title: '操作失败！请重试'
+              })
+            }
+            this.getOrderList()
           }
         }
       })
     },
     // 确认收货
-    async takeGoods (orderID) {
+    takeGoods (orderID, sellerID) {
       wx.showModal({
         title: '确认收货？',
         content: '',
@@ -171,8 +143,18 @@ export default {
         cancelColor: '#000000',
         confirmText: '确定',
         confirmColor: '#3CC51F',
-        success: (result) => {
+        success: async (result) => {
           if (result.confirm) {
+            const {data} = await this.$fly.post('/order/takeGoods', {order_id: orderID, seller_id: sellerID})
+            // console.log(data)
+            if (data.meta.status !== 200) {
+              return wx.showToast({
+                title: '操作失败！请重试',
+                icon: 'none',
+                mask: true
+              })
+            }
+            this.getOrderList()
           }
         }
       })
@@ -187,7 +169,7 @@ export default {
             'YYYY-MM-DD HH:mm'
           )
         })
-        this.orderList = orderList || []
+        this.orderList = orderList.reverse() || []
       } else {
         const { data } = await this.$fly.post('/order/orderList', {
           openid,
@@ -200,7 +182,7 @@ export default {
           )
         // console.log(item.created_time)
         })
-        this.orderList = orderList || []
+        this.orderList = orderList.reverse() || []
       }
     }
   },
@@ -231,8 +213,9 @@ export default {
       overflow: hidden;
       .type {
         overflow: hidden;
-        //   display: flex;
-        //   align-items: center;
+        // 以下样式会导致overflow无法生效
+        // display: flex;
+        // align-items: center;
         //   justify-content: center;
         height: 32%;
         background-color: #ecf5ff;

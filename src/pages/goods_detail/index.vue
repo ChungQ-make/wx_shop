@@ -15,7 +15,10 @@
     <!-- 基本信息栏 -->
     <view class="goods_price">￥{{ goodsDetail.goods_price }}</view>
     <view class="goods_name_row">
-      <view class="goods_name"><span style="color: #ffa500;">{{goodsDetail.status!==0?'[暂停出售]':'[正常出售]'}}</span>{{ goodsDetail.goods_name }}</view>
+      <view class="goods_name"
+        ><span :style="state[status].color">{{ state[status].text }}</span
+        >{{ goodsDetail.goods_name }}</view
+      >
       <view class="goods_collect" @click="handleCollect">
         <text
           :class="
@@ -27,6 +30,12 @@
     </view>
 
     <!-- 图文详情 -->
+    <view class="goods_info">
+      <view class="goods_info_title">产品类型</view>
+      <view class="goods_info_content">
+        <view>{{ goodsDetail.goods_type }}</view>
+      </view>
+    </view>
     <view class="goods_info">
       <view class="goods_info_title">库存</view>
       <view class="goods_info_content">
@@ -83,7 +92,40 @@ export default {
   data () {
     return {
       goodsDetail: {},
-      isCollect: false
+      isCollect: false,
+      state: [
+        // 0 正常出售
+        // 1 售罄（缺货）
+        // 2 暂停售出
+        // 3 禁止出售
+        // 4 审核中
+        // 5 审核不通过
+        {
+          text: '[正常出售]',
+          color: 'color: #67C23A;'
+        },
+        {
+          text: '[售罄]',
+          color: 'color: #E6A23C;'
+        },
+        {
+          text: '[暂停售出]',
+          color: 'color: #606266;'
+        },
+        {
+          text: '[禁止出售]',
+          color: 'color: #9932CC;'
+        },
+        {
+          text: '[审核中]',
+          color: 'color: #F56C6C;'
+        },
+        {
+          text: '[审核不通过]',
+          color: 'color: #909399;'
+        }
+      ],
+      status: 0
     }
   },
   methods: {
@@ -93,14 +135,29 @@ export default {
       const { data } = await this.$fly.get('/goods/detail', {
         goods_id: goodsID
       })
+      if (data.meta.status !== 200) {
+        return wx.showToast({
+          title: '没有该商品信息',
+          icon: 'error',
+          image: '',
+          duration: 1500,
+          mask: true,
+          success: (result) => {
+            setTimeout(() => {
+              wx.navigateBack({
+                complete: (res) => {}
+              })
+            }, 2000)
+          },
+          fail: () => {},
+          complete: () => {}
+        })
+      }
       this.goodsDetail = data.data
+      this.status = data.data.status
       this.goodsDetail.created_time = this.$moment(
         this.goodsDetail.created_time
       ).format('YYYY-MM-DD HH:mm')
-      this.goodsDetail.goods_imgUrl.push(
-        'http://localhost:5000/upload/img/catitems/goods_categories.png'
-      )
-      this.goodsDetail.goods_imgUrl.push('https://placeimg.com/640/480/any')
       this.isCollected()
     },
     // 图片预览放大
@@ -116,6 +173,15 @@ export default {
     },
     // 添加至购物车
     handleCartAdd () {
+      if (this.goodsDetail.status !== 0) {
+        return wx.showToast({
+          title: '您暂时无法购买此商品！',
+          icon: 'none',
+          image: '',
+          duration: 2000,
+          mask: true
+        })
+      }
       // 获取缓存的购物车数据
       let cart = wx.getStorageSync('cart') || []
       //   判断是否存在该商品
@@ -183,6 +249,21 @@ export default {
         (item) => item.goods_id === this.goodsDetail.goods_id
       )
       this.isCollect = index !== -1
+    },
+    // pay 直接支付 （单个商品支付）
+    pay () {
+      if (this.goodsDetail.status !== 0) {
+        return wx.showToast({
+          title: '您暂时无法购买此商品！',
+          icon: 'none',
+          image: '',
+          duration: 2000,
+          mask: true
+        })
+      }
+      wx.switchTab({
+        url: '/pages/cart/main'
+      })
     }
   },
   onShow () {

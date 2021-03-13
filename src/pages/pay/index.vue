@@ -24,6 +24,10 @@
           <span class="item1">邮政编码</span>
           <span class="item2">{{ address.postalCode }}</span>
         </div>
+        <div class="item_list">
+          <span class="item1">联系方式</span>
+          <span class="item2">{{ address.telNumber }}</span>
+        </div>
         <div class="bottom"></div>
       </div>
     </div>
@@ -116,6 +120,7 @@ export default {
         this.address.cityName +
         this.address.countyName +
         this.address.detailInfo
+      const {telNumber, postalCode} = this.address
       let balance = userInfos.money - this.totalPrice
       if (balance < 0) {
         return wx.showToast({
@@ -152,16 +157,33 @@ export default {
                 totalPrice,
                 buyer_name: userInfos.nickName,
                 buyer_id: userInfos.openid,
-                address
+                address,
+                postalCode,
+                telNumber
               }
               formData.push(itemInfo)
             })
             // 发送请求
             const { data } = await this.$fly.post('/order/create', {formData, totalPrice: this.totalPrice})
-            if (data.meta.status !== 200) {
+            if (data.meta.status === 1000) {
               return wx.showToast({
-                title: '支付失败！',
-                icon: 'error',
+                title: '超过该商品最大库存，请调整购买数量！',
+                icon: 'none',
+                image: '',
+                duration: 2000,
+                mask: true,
+                success: (result) => {
+                  setTimeout(() => {
+                    wx.switchTab({
+                      url: '/pages/cart/main'
+                    })
+                  }, 2000)
+                }
+              })
+            } else if (data.meta.status === 1002) {
+              return wx.showToast({
+                title: '余额不足！',
+                icon: 'none',
                 image: '',
                 duration: 2000,
                 mask: true,
@@ -180,11 +202,14 @@ export default {
               image: '',
               duration: 2000,
               mask: true,
-              success: (result) => {
+              success: async (result) => {
                 // 更新购物车和缓存数据
-                userInfos.money = data.data.money
+                // userInfos.money = data.data.money
+                // wx.setStorageSync('userInfos', userInfos)
                 this.cart = []
-                wx.setStorageSync('userInfos', userInfos)
+                const newData = await this.$fly.post('/user/getUerinfo', {openid: userInfos.openid})
+                this.userInfo = newData.data.data
+                wx.setStorageSync('userInfos', this.userInfo)
                 wx.setStorageSync('cart', this.cart)
                 setTimeout(() => {
                   wx.switchTab({

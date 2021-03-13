@@ -67,7 +67,7 @@ export default {
             if (data.meta.status !== 200) {
               return wx.showToast({
                 title: '充值失败！',
-                icon: 'erron',
+                icon: 'error',
                 image: '',
                 duration: 2000,
                 mask: true

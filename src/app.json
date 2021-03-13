@@ -12,7 +12,13 @@
         "pages/pay/main",
         "pages/topUps/main",
         "pages/order_detail/main",
-        "pages/order_list/main"
+        "pages/order_list/main",
+        "pages/release/main",
+        "pages/myGoods/main",
+        "pages/order_manage/main",
+        "pages/return/main",
+        "pages/editGoods/main",
+        "pages/_order_detail/main"
     ],
     "window": {
         "navigationBarBackgroundColor": "#469DF8",
