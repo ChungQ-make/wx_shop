@@ -105,6 +105,13 @@
                 {
                     "name": "pages/return/main",
                     "pathName": "pages/return/main",
+                    "query": "",
+                    "scene": null
+                },
+                {
+                    "name": "pages/myShop/main",
+                    "pathName": "pages/myShop/main",
+                    "query": "openid=ocAqT4j40nJf_KUjXB_aSq2kWLf0",
                     "scene": null
                 }
             ]

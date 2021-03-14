@@ -31,6 +31,14 @@
 
     <!-- 图文详情 -->
     <view class="goods_info">
+      <a :href="'/pages/myShop/main?openid='+goodsDetail.seller_id">
+        <view class="goods_info_title seller">商家(点击查看个人店铺)</view>
+        <view class="goods_info_content">
+          {{ goodsDetail.seller }}
+        </view>
+      </a>
+    </view>
+    <view class="goods_info">
       <view class="goods_info_title">产品类型</view>
       <view class="goods_info_content">
         <view>{{ goodsDetail.goods_type }}</view>
@@ -40,12 +48,6 @@
       <view class="goods_info_title">库存</view>
       <view class="goods_info_content">
         <view>{{ goodsDetail.stocks }}</view>
-      </view>
-    </view>
-    <view class="goods_info">
-      <view class="goods_info_title">商家</view>
-      <view class="goods_info_content">
-        <a href="javascript:">{{ goodsDetail.seller }}</a>
       </view>
     </view>
     <view class="goods_info">
@@ -369,6 +371,10 @@ page {
     color: #fff;
     font-weight: 600;
     padding: 10rpx;
+
+  }
+  .seller{
+      background-color: #F56C6C;
   }
   // .goods_info_content{}
 }
@@ -422,4 +428,5 @@ page {
     font-weight: 600;
   }
 }
+
 </style>

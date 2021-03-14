@@ -261,7 +261,7 @@ export default {
         // display: flex;
         // align-items: center;
         //   justify-content: center;
-        height: 14%;
+        height: (100/7%);
         background-color: #ecf5ff;
         margin-bottom: 2rpx;
         border-radius: 8rpx;

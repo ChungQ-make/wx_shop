@@ -63,7 +63,7 @@ export default {
       }
       clearTimeout(this.timer)
       this.timer = setTimeout(() => {
-        this.getQueryData(this.inputValue)
+        this.getQueryData(this.inputValue.trim())
       }, 1000)
     },
     handleCancel () {
@@ -72,7 +72,9 @@ export default {
     },
     async getQueryData (query) {
       const { data } = await this.$fly.get('/goods/search', { query })
-      this.goodsList = data.data.goodsList
+      this.goodsList = data.data.goodsList.sort((a, b) => {
+        return b.pageViews - a.pageViews
+      })
       this.goodsList.forEach((item) => {
         item.created_time = this.$moment(item.created_time).format(
           'YYYY-MM-DD HH:mm'

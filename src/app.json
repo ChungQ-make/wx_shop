@@ -18,7 +18,8 @@
         "pages/order_manage/main",
         "pages/return/main",
         "pages/editGoods/main",
-        "pages/_order_detail/main"
+        "pages/_order_detail/main",
+        "pages/myShop/main"
     ],
     "window": {
         "navigationBarBackgroundColor": "#469DF8",

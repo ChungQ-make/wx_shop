@@ -9,7 +9,11 @@
       <view class="user_wrap" :hidden="!isShow">
         <image class="user_bg" :src="userInfo.avatarUrl" mode="widthFix" />
         <view class="user_info">
-          <image class="user_icon" :src="userInfo.avatarUrl" />
+          <navigator
+            :url="'/pages/myShop/main?openid=' + userInfo.openid"
+            class="avatarBox"
+            ><image :src="userInfo.avatarUrl"
+          /></navigator>
           <view class="user_name">{{ userInfo.nickName }}</view>
         </view>
       </view>
@@ -27,13 +31,9 @@
             <view class="his_name">收藏的商品</view>
           </navigator>
           <navigator :hidden="!isShow" url="/pages/myGoods/main">
-            <view class="his_num">{{myGoodsNum}}</view>
+            <view class="his_num">{{ myGoodsNum }}</view>
             <view class="his_name">发布的商品</view>
           </navigator>
-          <!-- <navigator>
-                <view class="his_num">0</view>
-                <view class="his_name">发布新商品</view>
-            </navigator> -->
         </view>
 
         <!-- 我的钱包 -->
@@ -72,7 +72,11 @@
         </view>
         <!-- 发布我的商品 -->
         <view class="orders_wrap" :hidden="!isShow">
-          <view class="orders_title">我的商品</view>
+          <navigator
+            :url="'/pages/myShop/main?openid=' + userInfo.openid"
+          >
+            <view class="orders_title">我的商品</view>
+          </navigator>
           <view class="orders_content">
             <navigator url="/pages/release/main">
               <view class="order_name">发布商品</view>
@@ -147,8 +151,8 @@ export default {
         }
       })
 
-    //   ! 由于小程序接口调整 改用新的Api（wx.getUserProfile）获取用户数据
-    //  * 以下为原来的获取方式 （wx.getUserInfo）
+      //   ! 由于小程序接口调整 改用新的Api（wx.getUserProfile）获取用户数据
+      //  * 以下为原来的获取方式 （wx.getUserInfo）
       /*  if (e.target.userInfo) {
         wx.getUserProfile({
           desc: '获取用户信息',
@@ -183,7 +187,9 @@ export default {
       if (userInfos.openid) {
         this.isShow = true
         // 这里改成获取最新数据
-        const {data} = await this.$fly.post('/user/getUerinfo', {openid: userInfos.openid})
+        const { data } = await this.$fly.post('/user/getUerinfo', {
+          openid: userInfos.openid
+        })
         this.userInfo = data.data
         wx.setStorageSync('userInfos', this.userInfo)
       } else {
@@ -257,8 +263,7 @@ export default {
       }
     }
   },
-  onShareTimeline: function () {
-  }
+  onShareTimeline: function () {}
 }
 </script>
 
@@ -287,10 +292,22 @@ page {
         transform: translateX(-50%);
         top: 20%;
         text-align: center;
-        .user_icon {
-          width: 150rpx;
-          height: 150rpx;
-          border-radius: 50%;
+
+        .avatarBox {
+          // flex: 1;
+          border: 1px solid #eee;
+          border-radius: 50%; //圆形
+          padding: 8px;
+          box-shadow: 0 0 10px #ddd; //阴
+          background-color: #fff;
+          width: 180rpx;
+          height: 180rpx;
+          image {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: #eee;
+          }
         }
         .user_name {
           color: white;

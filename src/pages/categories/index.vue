@@ -49,7 +49,7 @@ export default {
       this.rightContent = this.categoriesData[index].children
     }
   },
-  mounted () {
+  onShow () {
     this.getCategoriesInfo()
   },
   // 下拉刷新事件 重置数据 页码
