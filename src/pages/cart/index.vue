@@ -171,35 +171,32 @@ export default {
       const { address, totalNum } = this
       const userInfos = wx.getStorageSync('userInfos')
       if (!userInfos.openid) {
-        wx.showToast({
+        return wx.showToast({
           title: '您还没有登陆！',
           icon: 'none',
           image: '',
           duration: 1500,
           mask: true
         })
-        return
       }
       if (!address.userName) {
-        wx.showToast({
+        return wx.showToast({
           title: '您没有添加收货地址',
           icon: 'none',
           image: '',
           duration: 1500,
           mask: true
         })
-        return
       }
 
       if (totalNum === 0) {
-        wx.showToast({
+        return wx.showToast({
           title: '您没有选购任何商品',
           icon: 'none',
           image: '',
           duration: 1500,
           mask: true
         })
-        return
       }
       // 跳转至支付界面
       wx.navigateTo({

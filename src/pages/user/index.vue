@@ -72,9 +72,7 @@
         </view>
         <!-- 发布我的商品 -->
         <view class="orders_wrap" :hidden="!isShow">
-          <navigator
-            :url="'/pages/myShop/main?openid=' + userInfo.openid"
-          >
+          <navigator :url="'/pages/myShop/main?openid=' + userInfo.openid">
             <view class="orders_title">我的商品</view>
           </navigator>
           <view class="orders_content">
@@ -91,6 +89,16 @@
               <view class="order_name">退货管理</view>
             </navigator>
           </view>
+        </view>
+        <!-- 聊天室 -->
+        <view class="address_wrap" @click="toSessionList(userInfo.openid)" :hidden="!isShow">
+          <div class="weui-cell weui-cell_active weui-cell_access">
+            <div class="weui-cell__bd">聊天室</div>
+            <div class="weui-cell__ft" style="font-size: 0">
+              <!-- <span class="demo_badge_tips">新消息</span> -->
+              <span class="weui-badge weui-badge_dot"></span>
+            </div>
+          </div>
         </view>
         <!-- 收货地址管理 -->
         <view class="address_wrap" @click="handleChooseAdress"
@@ -230,7 +238,14 @@ export default {
     },
     // 获取缓存中的发布成功商品数
     getMyGoodsNum () {
-      this.myGoodsNum = wx.getStorageSync('myGoodsNum')
+      this.myGoodsNum = wx.getStorageSync('myGoodsNum') || 0
+    },
+
+    // 跳转至会话列表页
+    toSessionList (openid) {
+      wx.navigateTo({
+        url: `/pages/sessionList/main?openid=${openid}`
+      })
     }
   },
   onShow () {
@@ -277,7 +292,7 @@ page {
   .user_info_wrap {
     height: 45vh;
     overflow: hidden;
-    background-color: var(--themeColor);
+    // background-color: var(--themeColor);
     position: relative;
     .user_wrap {
       position: relative;
@@ -307,12 +322,14 @@ page {
             height: 100%;
             border-radius: 50%;
             background-color: #eee;
+            border: #eee solid 1rpx;
           }
         }
         .user_name {
           color: white;
-          margin-top: 40rpx;
-          // font-size: 40rpx;
+          margin-top: 30rpx;
+          font-size: 40rpx;
+          font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
       }
     }
@@ -419,4 +436,5 @@ navigator {
 image {
   width: 100%;
 }
+
 </style>

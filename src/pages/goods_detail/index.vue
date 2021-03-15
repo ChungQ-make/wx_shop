@@ -65,10 +65,10 @@
 
     <!-- 底部工具栏 -->
     <view class="btm_tool">
-      <view class="tool_item">
+      <view class="tool_item" @click="toSession(goodsDetail.seller_id)">
         <view class="iconfont icon-kefu"></view>
-        <view>联系客服</view>
-        <button open-type="contact"></button>
+        <view>联系卖家</view>
+        <!-- <button open-type="contact"></button> -->
       </view>
       <view class="tool_item">
         <view class="iconfont icon-fenxiang"></view>
@@ -265,6 +265,22 @@ export default {
       }
       wx.switchTab({
         url: '/pages/cart/main'
+      })
+    },
+    // 跳转至客服会话页面
+    toSession (sellerID) {
+      const userInfos = wx.getStorageSync('userInfos')
+      if (!userInfos.openid) {
+        return wx.showToast({
+          title: '您还没有登陆！',
+          icon: 'none',
+          image: '',
+          duration: 1500,
+          mask: true
+        })
+      }
+      wx.navigateTo({
+        url: `/pages/session/main?seller_id=${sellerID}`
       })
     }
   },

@@ -15,4 +15,8 @@ page{
     /* 定义主题颜色 */
     --themeColor: #469DF8;
 }
+
+.weui-media-box__thumb{
+    border-radius: 8rpx;
+}
 </style>

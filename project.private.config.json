@@ -113,6 +113,36 @@
                     "pathName": "pages/myShop/main",
                     "query": "openid=ocAqT4j40nJf_KUjXB_aSq2kWLf0",
                     "scene": null
+                },
+                {
+                    "name": "pages/sessionList/main",
+                    "pathName": "pages/sessionList/main",
+                    "query": "openid=ocAqT4j40nJf_KUjXB_aSq2kWLf0",
+                    "scene": null
+                },
+                {
+                    "name": "pages/session/main",
+                    "pathName": "pages/session/main",
+                    "query": "openid=ocAqT4j40nJf_KUjXB_aSq2kWLf0",
+                    "scene": null
+                },
+                {
+                    "name": "pages/session/main",
+                    "pathName": "pages/session/main",
+                    "query": "seller_id=ocAqT4j40nJf_KUjXB_aSq2kWLf0",
+                    "scene": null
+                },
+                {
+                    "name": "pages/session/main",
+                    "pathName": "pages/session/main",
+                    "query": "seller_id=ocAqT4v5qAshZZOaxZpbbeH5UKmk",
+                    "scene": null
+                },
+                {
+                    "name": "pages/sessionList/main",
+                    "pathName": "pages/sessionList/main",
+                    "query": "openid=ocAqT4v5qAshZZOaxZpbbeH5UKmk",
+                    "scene": null
                 }
             ]
         }
