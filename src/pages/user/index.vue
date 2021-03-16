@@ -22,10 +22,10 @@
     <view class="user_content">
       <view class="user_main">
         <view class="history_wrap">
-          <navigator url="/pages/seller/main">
+          <!-- <navigator url="/pages/seller/main">
             <view class="his_num">0</view>
             <view class="his_name">收藏的店铺</view>
-          </navigator>
+          </navigator> -->
           <navigator url="/pages/collect/main">
             <view class="his_num">{{ collectionsNum }}</view>
             <view class="his_name">收藏的商品</view>

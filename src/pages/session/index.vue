@@ -4,7 +4,7 @@
     <div class="box">
       <scroll-view
         class="left_menu"
-        scroll-y="true"
+        :scroll-y="true"
         :scroll-with-animation="true"
         :scroll-into-view="bottomID"
       >
@@ -12,17 +12,25 @@
           <div
             class="item_left"
             v-if="recipientInfos.openid !== item.recipient_id"
-            :id="'item'+index"
+            :id="'item' + index"
           >
-            <img :src="recipientInfos.avatarUrl" alt="" mode="widthFix" @click="toMyShop(recipientInfos.openid)"/>
+            <img
+              :src="recipientInfos.avatarUrl"
+              alt=""
+              mode="widthFix"
+              @click="toMyShop(recipientInfos.openid)"
+            />
             <div class="content">
-              {{
-                item.content
-              }}
+              {{ item.content }}
             </div>
           </div>
-          <div class="item_right" v-else :id="'item'+index">
-            <img :src="userInfos.avatarUrl" alt="" mode="widthFix" @click="toMyShop(userInfos.openid)"/>
+          <div class="item_right" v-else :id="'item' + index">
+            <img
+              :src="userInfos.avatarUrl"
+              alt=""
+              mode="widthFix"
+              @click="toMyShop(userInfos.openid)"
+            />
             <div class="content">
               {{ item.content }}
             </div>
@@ -195,8 +203,9 @@ page {
           display: flex;
           flex-wrap: wrap;
           // width: 580rpx;
-        //   这里换成设置最大宽度 美化界面
+          //   这里换成设置最大宽度 美化界面
           max-width: 580rpx;
+          //   避免数字或者字母数据溢出
           word-break: break-all;
           border-radius: 8rpx;
           background-color: #8470ff;
